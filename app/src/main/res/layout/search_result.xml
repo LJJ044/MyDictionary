@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/searchWords_fatherLayout">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:background="@drawable/search_input"
+        android:padding="8dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="8dp">
+        <ImageButton
+            android:id="@+id/search_word_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/search"
+            android:layout_marginTop="3dp"
+            />
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:textColor="#433f3f"
+            android:textColorHint="#c7c4c4"
+            android:hint="请输入您要搜索的单词"
+            android:backgroundTint="#38ffffff"
+            android:ems="14"
+            android:imeOptions="actionGo"
+            android:singleLine="true"/>
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="取消" />
+    </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/searchWords_linerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="invisible"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/searchWords_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="单词"
+                android:textSize="25dp" />
+
+            <LinearLayout
+                android:id="@+id/searchWords_posE_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="46dp"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:gravity="center"
+                    android:text="英"
+                    android:textSize="15dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:text="[" />
+
+                <TextView
+                    android:id="@+id/searchWords_psE"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:text="音标" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:text="]" />
+
+                <ImageButton
+                    android:id="@+id/searchWords_voiceE"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/pron" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/searchWords_posA_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_marginTop="-15dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:gravity="center"
+                    android:text="美"
+                    android:textSize="15dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:text="["/>
+                <TextView
+                    android:id="@+id/searchWords_psA"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="音标"
+                    android:layout_marginLeft="3dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:text="]"/>
+                <ImageButton
+                    android:id="@+id/searchWords_voiceA"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/pron"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="基本释义:"
+                    android:padding="10dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/searchWords_posAcceptation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="词性 词义"
+                        android:padding="10dp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="例句释义:"
+                    android:padding="10dp"/>
+
+                <TextView
+                    android:id="@+id/searchWords_sent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="例句"
+
+                    android:padding="10dp"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
