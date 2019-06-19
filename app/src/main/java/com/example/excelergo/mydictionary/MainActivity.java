@@ -1,32 +1,40 @@
 package com.example.excelergo.mydictionary;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import beans.SententenceBean;
-import beans.WordsBean;
-import util.WordsAction;
 
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MediaService.IMediaStateListener, ServiceConnection {
     private ImageButton search_btn;
-    private WordsAction wordsAction;
-    private WordsBean words = new WordsBean();
     private EditText editText;
     private OkHttpClient okHttpClient;
-    private MediaPlayer player = null;
+    private MediaService mediaService;
 
 
     @Override
@@ -35,9 +43,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         search_btn = findViewById(R.id.search_main_btn);
         editText = findViewById(R.id.et_main);
-        ImageView imageView3=findViewById(R.id.SenVoice);
-        wordsAction = WordsAction.getInstance(this);
         okHttpClient=new OkHttpClient();
+
         getData();
 
         search_btn.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +88,23 @@ public class MainActivity extends AppCompatActivity {
                            textView3.setText(bean.getDateline());
                            ImageView imageView=findViewById(R.id.SenPic);
                            ImageView imageView2=findViewById(R.id.SenPic2);
+                           ImageView imageView1=findViewById(R.id.SenVoice);
+                           final String s=bean.getTts();
+                           imageView1.setOnClickListener(new View.OnClickListener() {
+                               @Override
+                               public void onClick(View view) {
+                                   if (mediaService == null) {
+                                       // bind service
+                                       Intent intent = new Intent(MainActivity.this, MediaService.class);
+                                       MainActivity.this.bindService(intent, MainActivity.this, Context.BIND_AUTO_CREATE);
+                                   } else {
+                                     Toast.makeText(MainActivity.this,"获取网络语音中",Toast.LENGTH_SHORT).show();
+                                       mediaService.playMusic(s);
+                                   }
+                                   Log.d("语音","有内容");
+                               }
+                           });
+
 
                            Glide
                                    .with(getApplicationContext())
@@ -97,5 +121,49 @@ public class MainActivity extends AppCompatActivity {
                }
            }
        }).start();
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName componentName, IBinder service) {
+        Log.d("onServiceConnected","连上了");
+        MediaService.MediaBinder mediaBinder = (MediaService.MediaBinder) service;
+        mediaService = mediaBinder.getService();
+        mediaService.setMediaStateListener(MainActivity.this);
+        }
+
+
+    @Override
+    public void onServiceDisconnected(ComponentName componentName) {
+
+    }
+
+    @Override
+    public void onPrepared(int duration) {
+
+    }
+
+    @Override
+    public void onProgressUpdate(int currentPos, int duration) {
+
+    }
+
+    @Override
+    public void onSeekComplete() {
+
+    }
+
+    @Override
+    public void onCompletion() {
+
+    }
+
+    @Override
+    public boolean onInfo(int what, int extra) {
+        return false;
+    }
+
+    @Override
+    public boolean onError(int what, int extra) {
+        return false;
     }
 }
