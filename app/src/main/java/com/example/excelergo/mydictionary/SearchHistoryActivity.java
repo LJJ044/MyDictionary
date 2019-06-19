@@ -2,6 +2,11 @@ package com.example.excelergo.mydictionary;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ContextMenu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.example.searchview.ICallBack;
 import com.example.searchview.SearchView;
@@ -10,6 +15,7 @@ import com.example.searchview.bCallBack;
 
 public class SearchHistoryActivity extends AppCompatActivity {
 private SearchView searchView;
+private ListView listView;
 
 
     @Override
@@ -17,6 +23,7 @@ private SearchView searchView;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_history);
         searchView=(SearchView)findViewById(R.id.search_view);
+        listView=findViewById(R.id.listView);
 
         searchView.setOnClickSearch(new ICallBack() {
             @Override

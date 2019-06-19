@@ -3,11 +3,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -33,8 +35,17 @@ import beans.SententenceBean;
 public class MainActivity extends AppCompatActivity implements MediaService.IMediaStateListener, ServiceConnection {
     private ImageButton search_btn;
     private EditText editText;
+    private ImageButton img_user;
     private OkHttpClient okHttpClient;
     private MediaService mediaService;
+    private long exitTime = 0;
+    private Handler mHandler = new Handler();
+    private Runnable mFinish = new Runnable() {
+        @Override
+        public void run() {
+           finish();
+        }
+    };
 
 
     @Override
@@ -43,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements MediaService.IMed
         setContentView(R.layout.activity_main);
         search_btn = findViewById(R.id.search_main_btn);
         editText = findViewById(R.id.et_main);
+        img_user=findViewById(R.id.img_user);
         okHttpClient=new OkHttpClient();
 
         getData();
@@ -60,7 +72,13 @@ public class MainActivity extends AppCompatActivity implements MediaService.IMed
                 startActivity(intent);
             }
         });
-
+    img_user.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent intent=new Intent(MainActivity.this,LoginActivity.class);
+            startActivity(intent);
+        }
+    });
     }
 
     public void SearchResult(View view) {
@@ -164,6 +182,16 @@ public class MainActivity extends AppCompatActivity implements MediaService.IMed
 
     @Override
     public boolean onError(int what, int extra) {
+        return false;
+    }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            exitTime = System.currentTimeMillis();
+            Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+        } else {
+            mHandler.postDelayed(mFinish, 0);
+        }
+        //return super.onKeyDown(keyCode, event);
         return false;
     }
 }
