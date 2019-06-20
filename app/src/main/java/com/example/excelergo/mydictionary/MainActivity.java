@@ -108,14 +108,16 @@ public class MainActivity extends AppCompatActivity implements MediaService.IMed
                            ImageView imageView2=findViewById(R.id.SenPic2);
                            ImageView imageView1=findViewById(R.id.SenVoice);
                            final String s=bean.getTts();
+                           if (mediaService == null) {
+                               // bind service
+                               Intent intent = new Intent(MainActivity.this, MediaService.class);
+                               MainActivity.this.bindService(intent, MainActivity.this, Context.BIND_AUTO_CREATE);
+                           }
                            imageView1.setOnClickListener(new View.OnClickListener() {
                                @Override
                                public void onClick(View view) {
-                                   if (mediaService == null) {
-                                       // bind service
-                                       Intent intent = new Intent(MainActivity.this, MediaService.class);
-                                       MainActivity.this.bindService(intent, MainActivity.this, Context.BIND_AUTO_CREATE);
-                                   } else {
+
+                                   if(mediaService!=null){
                                      Toast.makeText(MainActivity.this,"获取网络语音中",Toast.LENGTH_SHORT).show();
                                        mediaService.playMusic(s);
                                    }
