@@ -1,17 +1,23 @@
 package com.example.searchview;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -19,6 +25,7 @@ import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +61,7 @@ public class SearchView extends LinearLayout {
     // 回调接口
     private  ICallBack mCallBack;// 搜索按键回调接口
     private  bCallBack bCallBack; // 返回按键回调接口
+    private  tCallBack tCallBack;
     // 自定义属性设置
     // 1. 搜索字体属性设置：大小、颜色 & 默认提示
     private Float textSizeSearch;
@@ -178,6 +186,7 @@ public class SearchView extends LinearLayout {
                     boolean hasData = hasData(et_search.getText().toString().trim());
                     // 3. 若存在，则不保存；若不存在，则将该搜索字段保存（插入）到数据库，并作为历史搜索记录
                     if (!hasData) {
+                        deletPiece();
                         insertData(et_search.getText().toString().trim());
                         queryData("");
                     }
@@ -229,6 +238,36 @@ public class SearchView extends LinearLayout {
                     mCallBack.SearchAciton(et_search.getText().toString());
                 }
 
+            }
+        });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                PopupMenu popupMenu=new PopupMenu(context,view);
+                popupMenu.getMenuInflater().inflate(R.menu.history_popmenu_item,popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item ) {
+
+                        switch (item.getItemId()){
+                            case 0:
+                                Log.d("菜单","有用");
+                                Toast.makeText(getContext(),"删除",Toast.LENGTH_SHORT).show();
+                                break;
+                            case 1:
+
+                                if (!(tCallBack == null)){
+                                   tCallBack.transData(et_search.getText().toString());
+                                }
+                                Toast.makeText(getContext(),"添加",Toast.LENGTH_SHORT).show();
+                                break;
+
+                        }
+                        return true;
+                    }
+                });
+                popupMenu.show();
+                return true;
             }
         });
         /**
@@ -298,9 +337,9 @@ public class SearchView extends LinearLayout {
         // 3. 设置适配器
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-
         System.out.println(cursor.getCount());
         // 当输入框为空 & 数据库中有搜索记录时，显示 "删除搜索记录"按钮
+
         if (tempName.equals("") && cursor.getCount() != 0){
             tv_clear.setVisibility(VISIBLE);
         }
@@ -325,6 +364,11 @@ public class SearchView extends LinearLayout {
      * 关注3
      * 检查数据库中是否已经有该搜索记录
      */
+    private void deletPiece(){
+       db=helper.getWritableDatabase();
+       db.execSQL("delete from records where name =''");
+       db.close();
+    }
     private boolean hasData(String tempName) {
         // 从数据库中Record表里找到name=tempName的id
         Cursor cursor = helper.getReadableDatabase().rawQuery(
@@ -358,5 +402,7 @@ public class SearchView extends LinearLayout {
         this.bCallBack = bCallBack;
 
     }
-
+    public void setOnMenuClickTrans(tCallBack tCallBack){
+        this.tCallBack=tCallBack;
+    }
 }
