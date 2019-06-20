@@ -11,6 +11,7 @@ import android.widget.ListView;
 import com.example.searchview.ICallBack;
 import com.example.searchview.SearchView;
 import com.example.searchview.bCallBack;
+import com.example.searchview.tCallBack;
 
 
 public class SearchHistoryActivity extends AppCompatActivity {
@@ -41,7 +42,14 @@ private ListView listView;
                 finish();
             }
         });
-
+        searchView.setOnMenuClickTrans(new tCallBack() {
+            @Override
+            public void transData(String s) {
+                Intent intent=new Intent(SearchHistoryActivity.this,WordsBook.class);
+                intent.putExtra("wordbook",s);
+                startActivity(intent);
+            }
+        });
     }
 
 }

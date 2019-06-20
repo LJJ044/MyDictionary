@@ -24,6 +24,7 @@
        android:textColor="#433f3f"
        android:textSize="25dp"/>
     <ImageButton
+        android:id="@+id/img_user"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentRight="true"
