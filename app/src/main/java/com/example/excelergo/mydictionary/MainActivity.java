@@ -16,6 +16,7 @@ import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,9 +57,7 @@ public class MainActivity extends AppCompatActivity implements MediaService.IMed
         editText = findViewById(R.id.et_main);
         img_user=findViewById(R.id.img_user);
         okHttpClient=new OkHttpClient();
-
         getData();
-
         search_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -187,13 +186,16 @@ public class MainActivity extends AppCompatActivity implements MediaService.IMed
         return false;
     }
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((System.currentTimeMillis() - exitTime) > 2000) {
-            exitTime = System.currentTimeMillis();
-            Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
-        } else {
-            mHandler.postDelayed(mFinish, 0);
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
+                exitTime = System.currentTimeMillis();
+                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            } else {
+                mHandler.postDelayed(mFinish, 0);
+            }
+            //return super.onKeyDown(keyCode, event);
+
         }
-        //return super.onKeyDown(keyCode, event);
         return false;
     }
 }
