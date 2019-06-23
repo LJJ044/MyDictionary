@@ -257,23 +257,32 @@ public class SearchView extends LinearLayout {
                 list=new ArrayList<>();
                 list.add("删除");
                 list.add("添加到生字词");
+                list.add("取消");
                 listView2=popview.findViewById(R.id.lv_wordbook);
                 popAdapter=new PopAdapter();
                 listView2.setAdapter(popAdapter);
                 final PopupWindow popupWindow = new PopupWindow(popview, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                popupWindow.showAsDropDown(view1,25,25,50);
+                popupWindow.showAsDropDown(view1,25,100,50);
                 listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         if(list.get(i).equals("删除")){
+                            popupWindow.dismiss();
+                            TextView textView = (TextView) view1.findViewById(android.R.id.text1);
+                            String name = textView.getText().toString();
+                            deletePiece(name);
+                            queryData("");
                             Toast.makeText(getContext(),"删除了",Toast.LENGTH_SHORT).show();
-                        }else {
+                        }else if(list.get(i).equals("添加到生字词")) {
                             if (!(tCallBack == null)){
                                 popupWindow.dismiss();
                                 TextView textView = (TextView) view1.findViewById(android.R.id.text1);
                                 String name = textView.getText().toString();
                                 tCallBack.transData(name);
                             }
+                        }else {
+                            popupWindow.dismiss();
+                            Toast.makeText(getContext(),"取消操作",Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -358,6 +367,11 @@ public class SearchView extends LinearLayout {
             tv_clear.setVisibility(INVISIBLE);
         };
 
+    }
+    private void deletePiece(String tempName){
+        db=helper.getWritableDatabase();
+        db.execSQL("delete from records where name ='"+tempName+"'");
+        db.close();
     }
 
     /**

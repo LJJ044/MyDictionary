@@ -22,8 +22,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="词义"
-        android:layout_marginLeft="8dp"
 
+        android:layout_toRightOf="@id/wordbook_word"
+        android:layout_marginLeft="10dp"
+        android:layout_gravity="center"
         />
     </LinearLayout>
 </LinearLayout>

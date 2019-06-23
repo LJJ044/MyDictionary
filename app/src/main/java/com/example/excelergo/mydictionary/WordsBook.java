@@ -9,9 +9,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -52,9 +55,10 @@ public class WordsBook extends AppCompatActivity {
             wordPos.setWord(word);
             wordPos.setPos(explanation);
             list.add(wordPos);
+
             myAdapter=new MyAdapter();
             listView_words.setAdapter(myAdapter);
-            myAdapter.notifyDataSetChanged();
+            registerForContextMenu(listView_words);
             //adapter.insert(wordPos);
 
         }
@@ -92,6 +96,36 @@ public class WordsBook extends AppCompatActivity {
                 return view;
             }
         }
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        if(v==listView_words) {
+            int i = ((AdapterView.AdapterContextMenuInfo) menuInfo).position;
+            menu.add(0, 0, 0, "删除");
+            menu.add(0, 1, 0, "取消");
+        }
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        AdapterView.AdapterContextMenuInfo menuInfo=(AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        int i=menuInfo.position;
+        switch (item.getItemId()){
+            case 0:
+                list.remove(list.get(i));
+                myAdapter.notifyDataSetChanged();
+                break;
+            case 1:
+                break;
+            default:
+                break;
+
+        }
+
+        return  super.onContextItemSelected(item);
+
+    }
 }
 
 
