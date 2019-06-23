@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -19,17 +20,23 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.app.AppCompatActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Carson_Ho on 17/8/10.
@@ -48,10 +55,14 @@ public class SearchView extends LinearLayout {
     private LinearLayout search_block; // 搜索框布局
     private ImageView searchBack; // 返回按键
 
-
     // ListView列表 & 适配器
     private SearchListView listView;
     private BaseAdapter adapter;
+    private List<String> list;
+    private PopAdapter popAdapter;
+    private ListView listView2;
+    private View popview;
+
 
     // 数据库变量
     // 用于存放历史搜索记录
@@ -186,7 +197,6 @@ public class SearchView extends LinearLayout {
                     boolean hasData = hasData(et_search.getText().toString().trim());
                     // 3. 若存在，则不保存；若不存在，则将该搜索字段保存（插入）到数据库，并作为历史搜索记录
                     if (!hasData) {
-                        deletPiece();
                         insertData(et_search.getText().toString().trim());
                         queryData("");
                     }
@@ -242,34 +252,35 @@ public class SearchView extends LinearLayout {
         });
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                PopupMenu popupMenu=new PopupMenu(context,view);
-                popupMenu.getMenuInflater().inflate(R.menu.history_popmenu_item,popupMenu.getMenu());
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onItemLongClick(AdapterView<?> parent, final View view1, int position, long id) {
+                popview = LayoutInflater.from(getContext()).inflate(R.layout.pop_wordbook, null);
+                list=new ArrayList<>();
+                list.add("删除");
+                list.add("添加到生字词");
+                listView2=popview.findViewById(R.id.lv_wordbook);
+                popAdapter=new PopAdapter();
+                listView2.setAdapter(popAdapter);
+                final PopupWindow popupWindow = new PopupWindow(popview, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                popupWindow.showAsDropDown(view1,25,25,50);
+                listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public boolean onMenuItemClick(MenuItem item ) {
-
-                        switch (item.getItemId()){
-                            case 0:
-                                Log.d("菜单","有用");
-                                Toast.makeText(getContext(),"删除",Toast.LENGTH_SHORT).show();
-                                break;
-                            case 1:
-
-                                if (!(tCallBack == null)){
-                                   tCallBack.transData(et_search.getText().toString());
-                                }
-                                Toast.makeText(getContext(),"添加",Toast.LENGTH_SHORT).show();
-                                break;
-
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        if(list.get(i).equals("删除")){
+                            Toast.makeText(getContext(),"删除了",Toast.LENGTH_SHORT).show();
+                        }else {
+                            if (!(tCallBack == null)){
+                                popupWindow.dismiss();
+                                TextView textView = (TextView) view1.findViewById(android.R.id.text1);
+                                String name = textView.getText().toString();
+                                tCallBack.transData(name);
+                            }
                         }
-                        return true;
                     }
                 });
-                popupMenu.show();
                 return true;
             }
         });
+
         /**
          * 点击返回按键后的事件
          */
@@ -364,11 +375,7 @@ public class SearchView extends LinearLayout {
      * 关注3
      * 检查数据库中是否已经有该搜索记录
      */
-    private void deletPiece(){
-       db=helper.getWritableDatabase();
-       db.execSQL("delete from records where name =''");
-       db.close();
-    }
+
     private boolean hasData(String tempName) {
         // 从数据库中Record表里找到name=tempName的id
         Cursor cursor = helper.getReadableDatabase().rawQuery(
@@ -404,5 +411,30 @@ public class SearchView extends LinearLayout {
     }
     public void setOnMenuClickTrans(tCallBack tCallBack){
         this.tCallBack=tCallBack;
+    }
+    class PopAdapter extends BaseAdapter{
+
+        @Override
+        public int getCount() {
+            return list.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return list.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            popview=LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.pop_wordbook_item,null);
+            TextView textView=popview.findViewById(R.id.tv_delete);
+            textView.setText(list.get(i));
+            return popview;
+        }
     }
 }

@@ -6,11 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".WordsBook">
 <ListView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_weight="2"></ListView>
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"></ListView>
+    android:id="@+id/lv_words"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"></ListView>
+
 </LinearLayout>
