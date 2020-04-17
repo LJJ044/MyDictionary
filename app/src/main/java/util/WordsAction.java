@@ -7,15 +7,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
 import beans.WordsBean;
-import db.RecordSQLiteOpenHelper;
 import db.WordsSQLiteOpenHelper;
 
 public class WordsAction {
@@ -27,6 +26,7 @@ public class WordsAction {
      * Words的表名
      */
     private final String TABLE_WORDS = "Words";
+
     /**
      * 数据库工具，用于增、删、该、查
      */
@@ -79,7 +79,6 @@ public class WordsAction {
             values.put("sent", words.getSent());
             db.insert(TABLE_WORDS, null, values);
             values.clear();
-            return true;
         }
         return false;
     }
@@ -122,6 +121,7 @@ public class WordsAction {
 
         return words;
     }
+
     /**
      * 获取网络查找单词的对应地址
      *
@@ -228,9 +228,9 @@ public class WordsAction {
      * @param wordsKey 单词的key
      * @param ps       E 代表英式发音
      *                 A 代表美式发音
-     * @param context  上下文
+     * @param //context  上下文
      */
-    public void playMP3(String wordsKey, String ps, Context context) {
+    public void playMP3(String wordsKey, String ps,Context context) throws IOException {
         String fileName = wordsKey + "/" + ps + ".mp3";
         String adrs = FileUtil.getInstance().getPathInSD(fileName);
         if (player != null) {
@@ -242,7 +242,6 @@ public class WordsAction {
         }
         if (adrs != "") {//有内容则播放
             player = MediaPlayer.create(context, Uri.parse(adrs));
-            Log.d("测试", "播放");
             player.start();
         } else {//没有内容则重新去下载
             WordsBean words = getWordsFromSQLite(wordsKey);

@@ -148,10 +148,6 @@ public class SententenceBean {
     }
 
     public static class TagsBean {
-        /**
-         * id : null
-         * name : null
-         */
 
         private Object id;
         private Object name;

@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 
 /**
  * Created by Carson_Ho on 17/8/10.
@@ -21,6 +22,7 @@ public class EditText_Clear extends android.support.v7.widget.AppCompatEditText 
     public EditText_Clear(Context context) {
         super(context);
         init();
+
         // 初始化该组件时，对EditText_Clear进行初始化 ->>步骤2
     }
 
@@ -86,6 +88,7 @@ public class EditText_Clear extends android.support.v7.widget.AppCompatEditText 
         setCompoundDrawablesWithIntrinsicBounds(searchDrawable, null,
                 visible ? clearDrawable : null, null);
     }
+
 
     /**
      * 步骤4：对删除图标区域设置点击事件，即"点击 = 清空搜索框内容"

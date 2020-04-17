@@ -51,7 +51,9 @@ public class WordsHandler extends DefaultHandler {
         //在读完整个节点后换行
         if ("acceptation".equals(localName)) {
             posAcceptation.append("\n");
+            posAcceptation.append("\n");
         } else if ("orig".equals(localName)) {
+            sent.append("\n");
             sent.append("\n");
         } else if ("trans".equals(localName)) {
             sent.append("\n");
@@ -66,7 +68,7 @@ public class WordsHandler extends DefaultHandler {
         //去掉文本中原有的换行
         for (int i = start; i < start + length; i++) {
             if (ch[i] == '\n')
-                return;
+                return; ;
         }
         //将节点的内容存入Words对象对应的属性中
         if ("key".equals(nodeName)) {

@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.excelergo.mydictionary"
-        minSdkVersion 25
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -28,4 +28,5 @@ dependencies {
     implementation 'com.squareup.okhttp:okhttp:2.0.0'
     implementation project(':searchview')
     implementation 'com.google.code.gson:gson:2.2.4'
+    implementation 'com.mylhyl:acp:1.2.0'
 }

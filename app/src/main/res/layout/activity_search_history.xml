@@ -13,7 +13,7 @@
         app:textSizeSearch="5dp"
         app:textColorSearch="#9b9b9b"
         app:textHintSearch="请输入您要搜索的单词"
-        app:searchBlockHeight="150"
+        app:searchBlockHeight="200"
         app:searchBlockColor="#ffffff"
         />
 

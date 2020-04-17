@@ -4,7 +4,7 @@ public class WordPos {
     private String word;
     private String pos;
 
-    public WordPos(String word,String pos) {
+    public WordPos() {
                 this.word=word;
                 this.pos=pos;
     }

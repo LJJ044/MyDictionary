@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import beans.WordsBean;
@@ -45,7 +46,7 @@ public class SearchResultActivity extends AppCompatActivity {
         words = wordsAction.getWordsFromSQLite(word);
         if (word != words.getKey()) {
             String address = wordsAction.getAddressForWords(word);
-            HttpUtil.sentHttpRequest(address, new HttpCallBackListener() {
+            HttpUtil.sentHttpRequest(address,new HttpCallBackListener() {
                 @Override
                 public void onFinish(InputStream inputStream) {
                     WordsHandler wordsHandler = new WordsHandler();
@@ -58,6 +59,7 @@ public class SearchResultActivity extends AppCompatActivity {
 
                 @Override
                 public void onError(Exception e) {
+                Toast.makeText(getApplicationContext(),"NotFound 404",Toast.LENGTH_SHORT).show();
 
                 }
             });
@@ -85,14 +87,22 @@ public class SearchResultActivity extends AppCompatActivity {
         searchWords_voiceE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                wordsAction.playMP3(words.getKey(), "E", SearchResultActivity.this);
+                try {
+                    wordsAction.playMP3(words.getKey(), "E",SearchResultActivity.this);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
         searchWords_voiceA = (ImageButton) findViewById(R.id.searchWords_voiceA);
         searchWords_voiceA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                wordsAction.playMP3(words.getKey(), "A", SearchResultActivity.this);
+                try {
+                    wordsAction.playMP3(words.getKey(), "A",SearchResultActivity.this);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
         textView_cancel = (TextView) findViewById(R.id.tv_cancel);
@@ -135,7 +145,7 @@ public class SearchResultActivity extends AppCompatActivity {
     }
 
 
-    private Handler handler = new Handler() {
+    private  Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {

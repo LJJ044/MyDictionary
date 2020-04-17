@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,6 +7,11 @@
     tools:context=".MainActivity"
     android:orientation="vertical"
     android:background="#fff">
+    <LinearLayout
+        android:id="@+id/main_area"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,12 +28,21 @@
        android:gravity="center_vertical"
        android:textColor="#433f3f"
        android:textSize="25dp"/>
-    <ImageButton
+       <TextView
+           android:id="@+id/tv_username"
+           android:layout_width="wrap_content"
+           android:layout_height="50dp"
+           android:text="你好,"
+           android:layout_toLeftOf="@id/img_user"
+           android:layout_marginRight="5dp"
+           android:gravity="center"
+           android:textSize="20sp"/>
+    <ImageView
         android:id="@+id/img_user"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentRight="true"
-        android:background="@drawable/me"/>
+        android:src="@drawable/me"/>
 </RelativeLayout>
 
     <LinearLayout
@@ -66,6 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp">
           <ImageButton
+              android:id="@+id/wordbook"
               android:layout_width="60dp"
               android:layout_height="60dp"
               android:background="@drawable/shot"/>
@@ -105,11 +120,11 @@
         android:textSize="25dp"
         android:padding="10dp"
         />
-        <ImageView
+        <ImageButton
             android:id="@+id/SenVoice"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:src="@drawable/pron"
+            android:background="@drawable/pron"
             android:layout_marginLeft="10dp"
            />
       <LinearLayout
@@ -152,7 +167,7 @@
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:layout_gravity="center"
-                  android:text="  英文例句"
+                  android:text=" 中文例句"
                   android:layout_marginLeft="10dp"/>
 
           </LinearLayout>
@@ -167,4 +182,8 @@
       </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/chooseimg_layout"
+        android:id="@+id/pop_options"
+        android:visibility="gone"/>
+</FrameLayout>

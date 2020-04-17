@@ -19,6 +19,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.searchview.SearchView;
 
@@ -34,7 +35,7 @@ public class WordsBook extends AppCompatActivity {
     private ListView listView_words;
     private WordsAction wordsAction;
     private WordsBean words = new WordsBean();
-    private static List<WordPos> list=new ArrayList<>();
+    private  List<WordPos> list;
     private MyAdapter myAdapter;
 
 
@@ -50,25 +51,33 @@ public class WordsBook extends AppCompatActivity {
             words = wordsAction.getWordsFromSQLite(wordbook);
             String word = words.getKey();
             String explanation = words.getPosAcceptation();
-            //MySQLiteAdapter adapter=new MySQLiteAdapter(getApplicationContext());
-            WordPos wordPos=new WordPos(word,explanation);
+            MySQLiteAdapter adapter=new MySQLiteAdapter(getApplicationContext());
+            WordPos wordPos=new WordPos();
             wordPos.setWord(word);
             wordPos.setPos(explanation);
-            list.add(wordPos);
+            adapter.insert(wordPos);
+            init();
 
-            myAdapter=new MyAdapter();
-            listView_words.setAdapter(myAdapter);
-            registerForContextMenu(listView_words);
-            //adapter.insert(wordPos);
+        listView_words.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(WordsBook.this, SearchResultActivity.class);
+                String word=list.get(i).getWord();
+                intent.putExtra("word",word);
+                startActivity(intent);
+            }
+        });
 
         }
-        /*private void init(){
+        private void init(){
             MySQLiteAdapter adapter=new MySQLiteAdapter(getApplicationContext());
             list=adapter.queryAll();
             myAdapter=new MyAdapter();
+            listView_words.setAdapter(myAdapter);
+            //注册语境菜单
+            registerForContextMenu(listView_words);
 
-
-        } */
+        }
         class MyAdapter extends BaseAdapter{
             @Override
             public int getCount() {
@@ -99,7 +108,6 @@ public class WordsBook extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         if(v==listView_words) {
-            int i = ((AdapterView.AdapterContextMenuInfo) menuInfo).position;
             menu.add(0, 0, 0, "删除");
             menu.add(0, 1, 0, "取消");
         }
@@ -113,14 +121,20 @@ public class WordsBook extends AppCompatActivity {
         int i=menuInfo.position;
         switch (item.getItemId()){
             case 0:
+                WordPos wordPos=new WordPos();
+                String word=list.get(i).getWord();
+                String pos=list.get(i).getPos();
+                wordPos.setWord(word);
+                wordPos.setPos(pos);
+                MySQLiteAdapter adapter=new MySQLiteAdapter(getApplicationContext());
+                adapter.deleteData(wordPos);
                 list.remove(list.get(i));
                 myAdapter.notifyDataSetChanged();
+                adapter.queryAll();
+                Toast.makeText(WordsBook.this,"该记录已删除",Toast.LENGTH_SHORT).show();
                 break;
             case 1:
                 break;
-            default:
-                break;
-
         }
 
         return  super.onContextItemSelected(item);

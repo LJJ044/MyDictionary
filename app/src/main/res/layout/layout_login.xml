@@ -94,5 +94,14 @@
                 android:background="#fd178dc7"
                 android:layout_weight="1"/>
         </LinearLayout>
+        <TextView
+            android:id="@+id/alter_pwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="修改密码"
+            android:textSize="20sp"
+            android:textColor="#fff"
+            android:layout_gravity="right"
+            android:layout_marginTop="10dp"/>
     </LinearLayout>
 </LinearLayout>

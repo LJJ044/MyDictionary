@@ -1,24 +1,15 @@
 package com.example.searchview;
-
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -28,12 +19,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,7 +116,7 @@ public class SearchView extends LinearLayout {
         textHintSearch = typedArray.getString(R.styleable.Search_View_textHintSearch);
 
         // 搜索框高度
-        searchBlockHeight = typedArray.getInteger(R.styleable.Search_View_searchBlockHeight, 150);
+        searchBlockHeight = typedArray.getInteger(R.styleable.Search_View_searchBlockHeight, 0);
 
         // 搜索框颜色
         int defaultColor2 = context.getResources().getColor(R.color.colorDefault); // 默认颜色 = 白色
@@ -196,7 +185,7 @@ public class SearchView extends LinearLayout {
                     // 2. 点击搜索键后，对该搜索字段在数据库是否存在进行检查（查询）->> 关注1
                     boolean hasData = hasData(et_search.getText().toString().trim());
                     // 3. 若存在，则不保存；若不存在，则将该搜索字段保存（插入）到数据库，并作为历史搜索记录
-                    if (!hasData) {
+                    if (!hasData&&!et_search.getText().toString().equals("")) {
                         insertData(et_search.getText().toString().trim());
                         queryData("");
                     }
@@ -262,7 +251,7 @@ public class SearchView extends LinearLayout {
                 popAdapter=new PopAdapter();
                 listView2.setAdapter(popAdapter);
                 final PopupWindow popupWindow = new PopupWindow(popview, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                popupWindow.showAsDropDown(view1,25,100,50);
+                popupWindow.showAsDropDown(view1,600,-20,50);
                 listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -272,14 +261,13 @@ public class SearchView extends LinearLayout {
                             String name = textView.getText().toString();
                             deletePiece(name);
                             queryData("");
-                            Toast.makeText(getContext(),"删除了",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(),"已删除",Toast.LENGTH_SHORT).show();
                         }else if(list.get(i).equals("添加到生字词")) {
-                            if (!(tCallBack == null)){
-                                popupWindow.dismiss();
-                                TextView textView = (TextView) view1.findViewById(android.R.id.text1);
-                                String name = textView.getText().toString();
-                                tCallBack.transData(name);
-                            }
+                                    if(tCallBack!=null) {
+                                        TextView textView = (TextView) view1.findViewById(android.R.id.text1);
+                                        String name = textView.getText().toString();
+                                        tCallBack.transData(name);
+                                    }
                         }else {
                             popupWindow.dismiss();
                             Toast.makeText(getContext(),"取消操作",Toast.LENGTH_SHORT).show();
@@ -300,7 +288,6 @@ public class SearchView extends LinearLayout {
                 if (!(bCallBack == null)){
                     bCallBack.BackAciton();
                 }
-
                 //根据输入的内容模糊查询商品，并跳转到另一个界面，这个根据需求实现
             }
         });
@@ -351,7 +338,7 @@ public class SearchView extends LinearLayout {
         // 1. 模糊搜索
         Cursor cursor = helper.getReadableDatabase().rawQuery(
                 "select id as _id,name from records where name like '%" + tempName + "%' order by id desc ", null);
-        // 2. 创建adapter适配器对象 & 装入模糊搜索的结果
+        // 2. 创建adapter适配器对象 & 装入模糊搜索的结果0
         adapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, cursor, new String[] { "name" },
                 new int[] { android.R.id.text1 }, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         // 3. 设置适配器
@@ -396,6 +383,7 @@ public class SearchView extends LinearLayout {
                 "select id as _id,name from records where name =?", new String[]{tempName});
         //  判断是否有下一个
         return cursor.moveToNext();
+
     }
 
     /**
@@ -407,8 +395,9 @@ public class SearchView extends LinearLayout {
         db.execSQL("insert into records(name) values('" + tempName + "')");
         db.close();
     }
-
-
+    public void setOnMenuClickTrans(tCallBack tCallBack) {
+        this.tCallBack=tCallBack;
+    }
     /**
      * 点击键盘中搜索键后的操作，用于接口回调
      */
@@ -422,9 +411,6 @@ public class SearchView extends LinearLayout {
     public void setOnClickBack(bCallBack bCallBack){
         this.bCallBack = bCallBack;
 
-    }
-    public void setOnMenuClickTrans(tCallBack tCallBack){
-        this.tCallBack=tCallBack;
     }
     class PopAdapter extends BaseAdapter{
 

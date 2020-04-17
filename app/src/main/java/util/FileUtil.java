@@ -32,7 +32,7 @@ public class FileUtil {
             SDPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
             //清理测试时产生的文件
             File f = new File(SDPath + "VocabularyBuilder");
-            deleteFile(f);
+            //deleteFile(f);
             File fileV = createSDDir(SDPath, "VocabularyBuilder");
             AppPath = fileV.getAbsolutePath() + "/";
         }
@@ -102,13 +102,21 @@ public class FileUtil {
             File file = createSDFile(dir.getAbsolutePath() + "/", fileName);
             outputStream = new FileOutputStream(file);
             int length;
-            byte[] buffer = new byte[2 * 1024];
-            while ((length = inputStream.read(buffer)) != -1) {
+            byte[] buffer = new byte[2*1024];
+            /*while ((length = inputStream.read(buffer))!=-1) {
                 //注意这里的length；
                 //利用read返回的实际成功读取的字节数，将buffer写入文件，
                 // 否则将会出现错误的字节，导致保存文件与源文件不一致
                 outputStream.write(buffer, 0, length);
-            }
+            }*/
+            do{
+                length=inputStream.read(buffer);
+                if(length<=0){
+                    break;
+
+                }
+                outputStream.write(buffer,0,length);
+            }while (true);
             outputStream.flush();
             Log.d("测试", "写入成功");
         } catch (IOException e) {
@@ -135,7 +143,8 @@ public class FileUtil {
         if (file.exists()) {
             return file.getAbsolutePath();
         }
-        return "";
+            return "";
+
     }
     /**
      * 递归删除文件夹

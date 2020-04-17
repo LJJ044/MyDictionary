@@ -14,7 +14,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
         MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener,
         MediaPlayer.OnSeekCompleteListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnInfoListener {
 
-    private static MediaPlayer mMediaPlayer;
+    private  MediaPlayer mMediaPlayer;
     private int mCurrPlayPosition = 0;
     private String mPlayUrl;
     private static ProgressTask mProgressTask;
@@ -95,7 +95,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
         }
     }
 
-    private void playerToPosition(int CurrPlayPosition) {
+    public void playerToPosition(int CurrPlayPosition) {
         if (CurrPlayPosition > 0 && CurrPlayPosition < mMediaPlayer.getDuration()) {
             mMediaPlayer.seekTo(CurrPlayPosition);
         }
