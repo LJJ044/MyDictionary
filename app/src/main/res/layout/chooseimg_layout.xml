@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="150dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:background="@drawable/choose_img_bg">
+    <TextView
+        android:id="@+id/login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="登录账号"
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:gravity="center"/>
+<TextView
+    android:id="@+id/open_gallery"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="选取相册"
+    android:textSize="20sp"
+    android:padding="20dp"
+    android:gravity="center"/>
+    <TextView
+        android:id="@+id/open_camera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="打开相机"
+        android:textSize="20sp"
+        android:padding="20dp"
+        android:gravity="center"/>
+</LinearLayout>
