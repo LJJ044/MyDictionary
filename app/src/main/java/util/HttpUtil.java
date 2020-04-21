@@ -1,5 +1,9 @@
 package util;
 
+import android.widget.Toast;
+
+import com.example.excelergo.mydictionary.SearchResultActivity;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;

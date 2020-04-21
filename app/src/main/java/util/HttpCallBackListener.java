@@ -1,6 +1,7 @@
 package util;
 
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 
 public interface HttpCallBackListener {
     //访问完成

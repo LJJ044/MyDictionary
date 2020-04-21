@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 
 import beans.WordsBean;
 import util.HttpCallBackListener;
@@ -50,17 +51,23 @@ public class SearchResultActivity extends AppCompatActivity {
                 @Override
                 public void onFinish(InputStream inputStream) {
                     WordsHandler wordsHandler = new WordsHandler();
-                    ParseXML.parse(wordsHandler, inputStream);
-                    words = wordsHandler.getWords();
-                    wordsAction.saveWords(words);
-                    wordsAction.saveWordsMP3(words);
-                    handler.sendEmptyMessage(111);
+                    if(inputStream!=null) {
+                        ParseXML.parse(wordsHandler, inputStream);
+                        words = wordsHandler.getWords();
+                        wordsAction.saveWords(words);
+                        wordsAction.saveWordsMP3(words);
+                        try {
+                            inputStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        handler.sendEmptyMessage(111);
+                    }
                 }
 
                 @Override
                 public void onError(Exception e) {
-                Toast.makeText(getApplicationContext(),"NotFound 404",Toast.LENGTH_SHORT).show();
-
+                e.printStackTrace();
                 }
             });
         } else {
